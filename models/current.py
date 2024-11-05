@@ -1,7 +1,7 @@
 from account import Account
 
 class Current(Account):
-    def __init__(self, account_number, name, balance, is_active, privilege, company_name, registration_number):
-        super().__init__(account_number, name, balance, is_active, privilege)
-        self.company_name=company_name
+    def __init__(self, name, balance, pin_number, privilege,registration_number,website_url):
+        super().__init__(name, balance, pin_number, privilege)
         self.registration_number=registration_number
+        self.website_url=website_url

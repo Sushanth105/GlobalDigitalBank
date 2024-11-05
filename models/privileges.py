@@ -1,6 +1,6 @@
 from enum import Enum
 
-class AccoutPrivilege(Enum):
+class Privilege(Enum):
     PREMIUM="Premium"
     GOLD="Gold"
     SILVER="Silver"
