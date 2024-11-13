@@ -1,4 +1,4 @@
-from account import Account
+from models.account import Account
 
 class Savings(Account):
     def __init__(self, name, balance,pin_number, privilege, date_of_birth,gender):

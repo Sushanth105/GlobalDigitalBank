@@ -38,11 +38,80 @@ class AccountUI:
         pin_number=input('Enter your pin number: ')
         privilege = input('Enter account privilege (PREMIUM/GOLD/SILVER): ').strip().upper()
         
+        if account_type =='saving':
+            date_of_birth=input('Enter your date of birth (YYYY-MM-DD)')
+            gender = input('Enter your gender (M/F):')
+            account = AccountManager().open_account(account_type, name=name, balance=amount,date_of_birth=date_of_birth, gender=gender, pin_number=pin_number, privilege=privilege)
+            
+        elif account_type == 'current':
+            registration_number = input('Enter your registration number: ')
+            website_url= input('Enter your website URL: ')
+            account = AccountManager().open_account(account_type, name=name, balance=amount,registration_number=registration_number, website_url=website_url, pin_number=pin_number,privilege=privilege)
+            
+        else:
+            print('Invalid account type. Please try again')
+            return
+        
+        print(account_type.capitalize(), 'Account opened successfully. Account Number: ', account.account_number)
+              
     def close_account(self):
-        pass
+        account_number = int(input('Enter your account number: '))
+        account = next((acc for acc in AccountRepository.account if acc.account_number == account_number),None)
+        
+        if account:
+            try:
+                AccountManager().close_account(account)
+                print('Account closed successfully')
+            except Exception as e:
+                print("Error: ", e)
+                
+        else:
+            print('Account Not Found. Please try again')
+            
     def withdraw_fund(self):
-        pass
+        account_number = int(input('Enter your account number: '))
+        amount = float(input('Enter amount to withdraw: '))
+        pin_number = int(input('Enter your pin number: '))
+        account=next((acc for acc in AccountRepository.account if acc.account_number == account_number),None)
+        
+        if account:
+            try:
+                AccountManager().withdraw (account, amount, pin_number)
+                print('Amount withdrawn successfully')
+            except Exception as e:
+                print('Error: ', e)
+                
+        else:
+            print('Account Not Found. Please try again')
     def deposit_fund(self):
-        pass
+        account_number = int(input('Enter your account number: '))
+        amount = float(input('Enter amount to deposit: '))
+        account = next((acc for acc in AccountRepository.account if acc.account_number == account_number), None)
+        
+        if account:
+            try:
+                AccountManager().deposit(account, amount)
+                print('Amount deposited successfully')
+            except Exception as e:
+                print('Error: ', e)
+            
+        else:
+            print('Account Not Found. Please try again')
+            
     def transfer_fund(self):
-        pass
+        from_account_number = int(input('Enter your account number: '))
+        pin_number = int(input('Enter your pin number: '))
+        to_account_number = int(input('Enter reciever account number: '))
+        amount = float(input('Enter amount to deposit: '))
+        from_account = next((acc for acc in AccountRepository.account if acc.account_number == from_account_number), None)
+        to_account = next((acc for acc in AccountRepository.account if acc.account_number == to_account_number), None)
+        
+        if from_account and to_account:
+            try:
+                AccountManager().transfer(from_account,to_account,amount,pin_number)
+                print('Amount transfered successfully')
+            except Exception as e:
+                print('Error: ', e)
+            
+        else:
+            print('Account Not Found. Please try again')

@@ -16,7 +16,7 @@ from services.account_privileges_manager import AccountPrivilegesManager
 
 class AccountManager:
     def open_account(self,account_type,**kwargs):
-        if account_type == 'savings':
+        if account_type == 'saving':
             new_account = Savings(**kwargs)
         elif account_type == 'current':
             new_account=Current(**kwargs)
@@ -31,7 +31,7 @@ class AccountManager:
             raise AccountNotActiveException('Account is not Active')
         
     def validate_pin(self,account,pin_number):
-        if account.pin_number != pin_number:
+        if int(account.pin_number) != int(pin_number):
             raise InvalidPinException('Invalid pin')
         
     def withdraw(self,account,amount,pin_number):

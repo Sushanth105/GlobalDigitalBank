@@ -1,4 +1,4 @@
-from account import Account
+from models.account import Account
 
 class Current(Account):
     def __init__(self, name, balance, pin_number, privilege,registration_number,website_url):
