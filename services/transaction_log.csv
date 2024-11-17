@@ -1,0 +1,4 @@
+account_number,amount,transaction_type,date,to_account_number
+1001,100.0,withdraw,2024-11-17 21:01:24.920891,
+1002,100.0,deposit,2024-11-17 21:01:39.546059,
+1002,100.0,transfered,2024-11-17 21:02:19.052072,1001

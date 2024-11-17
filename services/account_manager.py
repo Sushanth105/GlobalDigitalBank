@@ -10,9 +10,11 @@ from repositories.account_repository import AccountRepository
 from exceptions.exceptions import AccountNotActiveException
 from exceptions.exceptions import InsufficientFundsException
 from exceptions.exceptions import InvalidPinException
+from exceptions.exceptions import InvalidPrivilegeException
 from exceptions.exceptions import TransferLimitExceededException
 from services.transaction_manager import TransactionManager
 from services.account_privileges_manager import AccountPrivilegesManager
+import json
 
 class AccountManager:
     def open_account(self,account_type,**kwargs):
@@ -69,3 +71,30 @@ class AccountManager:
     def close_account(self,account):
         if not account.is_active:
             raise AccountNotActiveException('Account is already Deactivated')
+        
+    def get_transfer_limit(self,account):
+        if not account.privilege in AccountPrivilegesManager.privileges :
+            raise InvalidPrivilegeException('Invalid Privilege')
+        
+        return AccountPrivilegesManager.get_transfer_limit(account.privilege)
+    
+    try:
+        with open("services/Privilege_limit.json", mode='w', newline='') as file:
+            json.dump(AccountPrivilegesManager.privileges,file,indent=4)
+    except IOError as e:
+        print(f"Error initializing log file: {e}")
+        
+    
+    def change_transfer_limit(self,privilege,limit):
+        if not privilege in AccountPrivilegesManager.privileges :
+            raise InvalidPrivilegeException('Invalid Privilege')
+        if not limit>0:
+            raise ValueError('Limit should be greater than 0')
+        
+        AccountPrivilegesManager.privileges[privilege]=limit
+        
+        try:
+            with open("services/Privilege_limit.json", mode='w', newline='') as file:
+                json.dump(AccountPrivilegesManager.privileges,file,indent=4)
+        except IOError as e:
+            print(f"Error initializing log file: {e}")

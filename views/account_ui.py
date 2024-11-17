@@ -1,5 +1,4 @@
 from services.account_manager import AccountManager
-from services.transaction_manager import TransactionManager
 from repositories.account_repository import AccountRepository
 
 class AccountUI:
@@ -12,6 +11,8 @@ class AccountUI:
             print('3. Withdraw Fund')
             print('4. Deposit Fund')
             print('5. Transfer Fund')
+            print('6. Check Transfer Limit')
+            print('7. Set Transfer Limit')
             print('9. Exit')
             
             choice = int(input("Enter your choice : "))
@@ -26,6 +27,10 @@ class AccountUI:
                 self.deposit_fund()
             elif choice==5:
                 self.transfer_fund()
+            elif choice==6:
+                self.check_transfer_limit()
+            elif choice==7:
+                self.set_transfer_limit()
             elif choice==9:
                 break
             else:
@@ -115,3 +120,28 @@ class AccountUI:
             
         else:
             print('Account Not Found. Please try again')
+            
+    def check_transfer_limit(self):
+        account_number= int(input('Enter your account number: '))
+        account = next((acc for acc in AccountRepository.account if acc.account_number == account_number), None)
+        if account:
+            try:
+                print('Transfer Limit: ',AccountManager().get_transfer_limit(account))
+            except Exception as e:
+                print('Error: ', e)
+        else:
+            print('Account Not Found. Please try again')
+            
+    def set_transfer_limit(self):
+        password='Password'
+        privilege= input('Enter the privilege(PREMIUM/GOLD/SILVER): ').strip().upper()
+        limit=int(input("Enter the new limit: "))
+        authenticate=input("Enter the password: ")
+        if authenticate==password:
+            try:
+                AccountManager().change_transfer_limit(privilege,limit)
+                print('Transfer Limit changed successfully')
+            except Exception as e:
+                print('Error: ', e) 
+        else:
+            print('Invalid Password. Please try again')

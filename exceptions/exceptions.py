@@ -6,7 +6,5 @@ class InvalidPinException(Exception):
     pass
 class TransferLimitExceededException(Exception):
     pass
-class AccountNotActiveException(Exception):
-    pass
-class AccountNotActiveException(Exception):
+class InvalidPrivilegeException(Exception):
     pass
