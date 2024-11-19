@@ -18,7 +18,7 @@ class TransactionManager:
     
     @staticmethod
     def get_current_timestamp():
-        return dt.datetime.now()
+        return str(dt.datetime.now())
     
     @classmethod
     def log_transaction(cls, account_number,amount,transaction_type,to_account_number=None):

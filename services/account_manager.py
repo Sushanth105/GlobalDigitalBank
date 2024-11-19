@@ -25,7 +25,7 @@ class AccountManager:
         else:
             raise ValueError('Invalid account type')
             
-        AccountRepository.save_account(new_account)
+        AccountRepository.save_account(account_type,new_account)
         return new_account
     
     def check_account_active(self,account):
@@ -71,6 +71,7 @@ class AccountManager:
     def close_account(self,account):
         if not account.is_active:
             raise AccountNotActiveException('Account is already Deactivated')
+        account.is_active=False
         
     def get_transfer_limit(self,account):
         if not account.privilege in AccountPrivilegesManager.privileges :
@@ -98,3 +99,33 @@ class AccountManager:
                 json.dump(AccountPrivilegesManager.privileges,file,indent=4)
         except IOError as e:
             print(f"Error initializing log file: {e}")
+            
+    def check_withdrawal_count(self,date):
+        i=0
+        for tr in TransactionManager.transaction_log:
+            if date in tr['date'] and tr['transaction_type'] == 'withdraw':
+                i +=1
+        return i
+    
+    def check_closed_account_count(self):
+        i=0
+        for acc in AccountRepository.account:
+            if not acc.is_active:
+                i +=1
+        return i
+    
+    def check_transfer_count(self,limit):
+        i=0
+        for tr in TransactionManager.transaction_log:
+            if tr['transaction_type'] == 'transfered' and tr['amount'] > limit:
+                i +=1
+        return i
+    
+    def check_transaction_count(self,account_type):
+        if account_type not in ['saving','current']:
+            raise ValueError('Invalid account type')
+        i=0
+        for acc in TransactionManager.transaction_log:
+            if acc['account_type'] == account_type:
+                i +=1
+        return i
